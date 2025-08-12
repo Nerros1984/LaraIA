@@ -1,6 +1,13 @@
 {
   "version": 2,
   "builds": [
-    { "src": "api/**/*.js", "use": "@vercel/node" }
+    { "src": "api/ping.js", "use": "@vercel/node" },
+    { "src": "api/orders.js", "use": "@vercel/node" },
+    { "src": "api/webhooks/stripe.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "^/api/ping$", "dest": "/api/ping.js" },
+    { "src": "^/api/orders$", "dest": "/api/orders.js" },
+    { "src": "^/api/webhooks/stripe$", "dest": "/api/webhooks/stripe.js" }
   ]
 }
