@@ -1,13 +1,13 @@
-// api/webhooks/stripe.js
 import Stripe from "stripe";
 
 export const config = { api: { bodyParser: false } };
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") return res.status(405).end();
+  if (req.method !== "POST") return res.status(405).send("Method Not Allowed");
 
+  // leer raw body
   const chunks = [];
-  for await (const chunk of req) chunks.push(chunk);
+  for await (const c of req) chunks.push(c);
   const buf = Buffer.concat(chunks);
 
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -25,11 +25,14 @@ export default async function handler(req, res) {
   }
 
   if (event.type === "checkout.session.completed") {
-    const session = event.data.object;
-    const orderId = session.client_reference_id;
+    const orderId = event.data.object.client_reference_id;
     console.log("Pago TEST OK:", orderId);
-    // TODO: aquí llama a tu n8n y guarda en histórico
-    // await fetch("https://TU_N8N/webhook/...", { method:"POST", headers:{'Content-Type':'application/json'}, body: JSON.stringify({ orderId, tipo:'blog_test' }) });
+    // Aquí puedes llamar a n8n si quieres:
+    // await fetch(process.env.N8N_WEBHOOK_URL, {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({ orderId, tipo: "blog_test" })
+    // });
   }
 
   res.status(200).end();
