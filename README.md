@@ -1,2 +1,0 @@
-# LaraIA
-Asistente IA
