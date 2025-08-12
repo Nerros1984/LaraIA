@@ -1,0 +1,4 @@
+{
+    "type": "module",
+    "dependencies": { "stripe": "^16.0.0" }
+  }
